@@ -1,0 +1,94 @@
+{% extends 'master/patienthome.html' %}
+{% load static %}
+
+{% block dynamic_page %}
+  <head>
+    <link rel="stylesheet" href="{%  static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{%  static 'vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+  </head>
+  <body>
+    <div class="container-scroller">
+        <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Edit Patient</h2>
+        <p class="card-description"></p>        
+        <form class="forms-sample" action="../editpsave/" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+            <div >  
+                {% for patient in patientdetials %}          
+                <h3 class="card-title">You're Now editing {{patient.name}}</h3>
+                <br>
+                <div class="form-group">
+                    <label for="exampleInputName1">Name</label>
+                    <input type="text" name="name" class="form-control" id="exampleInputName1" placeholder="Name">
+                    <input type="hidden" name="id" class="form-control"  Value="{{patient.id}}">
+                </div>
+              {% endfor %}  
+              <br>
+              <div class="form-group">
+                <label for="exampleInputEmail3">Email address</label>
+                <input type="email" name="email" class="form-control" id="exampleInputEmail3" placeholder="Email">
+              </div>
+              <br>
+              <div class="form-group">
+                <label for="exampleInputName1">age</label>
+                <input type="text" name="age" class="form-control" placeholder="age">
+              </div>
+              <br>
+              <div class="form-group">
+                <label for="exampleInputPassword4">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword4" placeholder="Password">
+              </div>
+              <br>
+              <div class="form-group">
+                <label for="exampleSelectGender">Gender</label>
+                <select name="gender" class="form-control" id="exampleSelectGender">
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Others</option>
+                </select>
+              </div>
+              <br>
+              <div class="form-group">
+                <label for="exampleInputName1">Contact Number</label>
+                <input type="text" name="number" class="form-control"  placeholder="Contact">
+              </div>
+              <br>
+              <div class="form-group"></div>
+                <label>File upload</label>
+                <input type="file" name="img" class="file-upload-default">
+                <div class="input-group col-xs-12">
+                  
+                  <span class="input-group-append">
+                    
+                  </span>
+                </div>
+              </div>
+              <br>             
+              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              <button class="btn btn-dark">Cancel</button>
+        </form> 
+                   
+      </div>
+    </div>
+  </div>
+
+  <script src="{%  static 'vendors/js/vendor.bundle.base.js' %}"></script>    
+    <script src="{%  static 'vendors/select2/select2.min.js' %}"></script>
+    <script src="{%  static 'vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>   
+    <script src="{%  static 'js/off-canvas.js' %}"></script>
+    <script src="{%  static 'js/hoverable-collapse.js' %}"></script>
+    <script src="{%  static 'js/misc.js' %}"></script>
+    <script src="{%  static 'js/settings.js' %}"></script>
+    <script src="{%  static 'js/todolist.js' %}"></script>    
+    <script src="{%  static 'js/file-upload.js' %}"></script>
+    <script src="{%  static 'js/typeahead.js' %}"></script>
+    <script src="{%  static 'js/select2.js' %}"></script>   
+   
+  </body>
+{% endblock %}

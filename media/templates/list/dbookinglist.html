@@ -1,0 +1,85 @@
+{% extends 'master/doctorhome.html' %}
+{% load static %}
+
+{% block dynamic_page %}
+<head>  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Doctor</title>  
+  <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}">
+  <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">  
+  <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+</head>
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title"> Booking Table </h3>
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Tables</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Basic tables</li>
+                </ol>
+              </nav>
+            </div>
+            <div class="row">                         
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-dark">
+                        <thead>
+                          <tr>
+                            <th> Token.No </th>
+                            <th> Doctor </th>
+                            <th> Patient </th>
+                            <th> Time </th>
+                            <th> Date </th> 
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for booking in bookinglists %}
+                          <tr>
+                            <td>{{booking.id}} </td>
+                            <td>{{booking.doctor}}</td>
+                            <td>{{booking.patient}}</td>
+                            <td>{{booking.doctor.time}}</td>
+                            <td>{{booking.date}}</td>
+                            <td>
+                              <label class="badge badge-danger" data-id="{{ booking.id }}" onclick="ale(this)">
+                                Delete
+                              </label>
+                            </td>                           
+                          </tr>
+                          {% endfor %}                    
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div> 
+              <script>              
+                function ale(button)
+                 {  
+                  const id = button.getAttribute('data-id');
+                  alert("are u sure want to delete this Booking");
+                  debugger
+                  fetch(`../delete_bookinglist/${id}`)
+                    .then(response => response.json()) 
+                    .then(data => {
+                      if (data.success) {
+                        button.closest('tr').remove();
+                        alert("Result deleted successfully.");
+                      } else {
+                        alert("An error occurred while deleting the result.");
+                      }
+                    })            
+                }
+                </script>   
+    
+    <script src="{% static 'vendors/js/vendor.bundle.base.js' %}"></script>
+    <script src="{% static 'js/off-canvas.js' %}"></script>
+    <script src="{% static 'js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'js/misc.js' %}"></script>
+    <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'js/todolist.js' %}"></script>
+    {% endblock %} 

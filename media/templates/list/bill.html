@@ -1,0 +1,316 @@
+{% extends 'master/billingadminhome.html' %}
+{% load static %}
+
+{% block dynamic_page %}
+  <head>
+    <link rel="stylesheet" href="{%  static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'assets/vendors/css/vendor.bundle.base.css' %}">
+    <link rel="stylesheet" href="{%  static 'assets/vendors/select2/select2.min.css' %}">
+    <link rel="stylesheet" href="{%  static 'assets/vendors/select2-bootstrap-theme/select2-bootstrap.min.css' %}">
+  </head>
+  <body>
+    <div class="container-scroller">
+        <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title">Prescription</h2>
+        <p class="card-description"></p>
+              <div class="form-group">
+                  <label for="patientSelect"><h2>Select Patient</h2></label>
+                  <select class="form-control" name="patient" id="patientSelect">
+                      <option>~Select Patient~</option>
+                      {% for pprescription in prescriptionlists %}                                   
+                      <option value="{{pprescription.id}}">{{pprescription.name}}</option>
+                      {% endfor %}
+                  </select> 
+              </div> 
+              <br>
+              <div class="row" id="printableDiv">                         
+                <div class="col-lg-12 grid-margin stretch-card">
+                  <div class="card" >
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-dark">
+                          <thead>
+                            <tr>
+                              <th> # </th>
+                              <th> name </th>
+                              <th> use </th>
+                              <th> price </th>
+                              <th> Quantity </th>                              
+                            </tr>
+                          </thead>
+                          <tbody id="medicineTableBody">
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td id="totalPrice"></td>
+                            </tr>
+                          </tfoot>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                
+                </div>
+              <br>
+              <button id="savePurchase" class="btn btn-success">Save Purchase</button>
+          <button onclick="printDiv()" class="btn btn-primary mr-2" >Print Bill</button>
+      </div>
+    </div>
+  </div>
+<!-- <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const patientSelect = document.getElementById('patientSelect');
+    const medicineTableBody = document.getElementById('medicineTableBody');
+
+    patientSelect.addEventListener('change', function() {
+        const patientId = this.value;
+        if (patientId) {
+            fetchmedicine(patientId);
+        } else {
+            clearTable();
+        }
+    });
+
+    document.getElementById('savePurchase').addEventListener('click', savePurchases);
+
+    function fetchmedicine(patientId) {
+        fetch(`../fetch_medicine/${patientId}/`)
+            .then(response => response.json())
+            .then(data => {
+                populateTable(data);
+                calculateTotal();
+            })
+            .catch(error => console.error('Error fetching Medicines:', error));
+    }
+
+    function populateTable(data) {
+        clearTable();  // Clear existing data
+        data.forEach((pprescription, index) => {
+            const row = `<tr>
+                            <td>${index + 1}</td>
+                            <td>${pprescription.medicinename.name}</td>
+                            <td>${pprescription.medicinename.use}</td>
+                            <td class="price">${pprescription.medicinename.price}$</td>
+                            <td class="quantity">${pprescription.quantity}"</td>                           
+                        </tr>`;
+            medicineTableBody.innerHTML += row;
+        });
+    }
+
+    function clearTable() {
+        medicineTableBody.innerHTML = '';
+        document.getElementById('totalPrice').innerText = '';
+    }
+
+    function calculateTotal() {
+    let total = 0;
+    const prices = document.querySelectorAll('.price');
+
+    prices.forEach(priceElement => {
+        const price = parseFloat(priceElement.innerText.replace('$', ''));
+        const quantityElement = priceElement.closest('tr').querySelector('.quantity');
+        const quantity = parseInt(quantityElement.innerText); // Changed from .value to .innerText
+        total += price * quantity;
+    });
+
+    document.getElementById('totalPrice').innerText = `Total: ${total}$`;
+}
+
+
+    function savePurchases() {
+        const patientId = patientSelect.value;
+        const purchases = [];
+
+        medicineTableBody.querySelectorAll('tr').forEach(row => {
+            const medicineName = row.cells[1].innerText;
+            const quantityElement = row.querySelector('.quantity');
+            const quantity = parseInt(quantityElement.value);
+
+            if (quantity > 0) {
+                purchases.push({
+                    medicine_name: medicineName,
+                    quantity: quantity
+                });
+            }
+        });
+        debugger
+        if (purchases.length > 0) {
+            fetch(`../save_purchase/${patientId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(), // Make sure you have CSRF token in your function
+                },
+                body: JSON.stringify(purchases)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Purchases saved successfully!');
+                    clearTable();
+                } else {
+                    alert('Error saving purchases.');
+                }
+            })
+            .catch(error => console.error('Error saving purchases:', error));
+        } else {
+            alert('No medicines selected for purchase.');
+        }
+    }
+
+    function getCSRFToken() {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+                return value;
+            }
+        }
+        return null;
+    }
+});
+
+</script> -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const patientSelect = document.getElementById('patientSelect');
+  const medicineTableBody = document.getElementById('medicineTableBody');
+
+  patientSelect.addEventListener('change', function() {
+      const patientId = this.value;
+      if (patientId) {
+          fetchmedicine(patientId);
+      } else {
+          clearTable();
+      }
+  });
+
+  document.getElementById('savePurchase').addEventListener('click', savePurchases);
+
+  function fetchmedicine(patientId) {
+      fetch(`../fetch_medicine/${patientId}/`)
+          .then(response => response.json())
+          .then(data => {
+              populateTable(data);
+              calculateTotal();
+          })
+          .catch(error => console.error('Error fetching Medicines:', error));
+  }
+
+  function populateTable(data) {
+      clearTable();  // Clear existing data
+      data.forEach((pprescription, index) => {
+          const row = `<tr>
+                          <td>${index + 1}</td>
+                          <td>${pprescription.medicinename_id__name}</td>
+                          <td>${pprescription.medicinename_id__use}</td>
+                          <td class="price">${pprescription.medicinename_id__price}$</td>
+                          <td class="quantity">${pprescription.quantity}</td>                           
+                      </tr>`;
+          medicineTableBody.innerHTML += row;
+      });
+  }
+
+  function clearTable() {
+      medicineTableBody.innerHTML = '';
+      document.getElementById('totalPrice').innerText = '';
+  }
+
+  function calculateTotal() {
+      let total = 0;
+      const prices = document.querySelectorAll('.price');
+
+      prices.forEach(priceElement => {
+          const price = parseFloat(priceElement.innerText.replace('$', ''));
+          const quantityElement = priceElement.closest('tr').querySelector('.quantity');
+          const quantity = parseInt(quantityElement.innerText); // Changed from .value to .innerText
+          total += price * quantity;
+      });
+
+      document.getElementById('totalPrice').innerText = `Total: ${total}$`;
+  }
+
+  function savePurchases() {
+      const patientId = patientSelect.value;
+      const purchases = [];
+
+      medicineTableBody.querySelectorAll('tr').forEach(row => {
+          const medicineName = row.cells[1].innerText;
+          const quantityElement = row.querySelector('.quantity');
+          const quantity = parseInt(quantityElement.innerText); // Should be innerText instead of value
+
+          if (quantity > 0) {
+              purchases.push({
+                  medicine_name: medicineName,
+                  quantity: quantity
+              });
+          }
+      });
+
+      if (purchases.length > 0) {
+          fetch(`../save_purchase/${patientId}/`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCSRFToken(), // Make sure you have CSRF token in your function
+              },
+              body: JSON.stringify(purchases)
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert('Purchases saved successfully!');
+                  clearTable();
+              } else {
+                  alert('Error saving purchases.');
+              }
+          })
+          .catch(error => console.error('Error saving purchases:', error));
+      } else {
+          alert('No medicines selected for purchase.');
+      }
+  }
+
+  function getCSRFToken() {
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+          const [name, value] = cookie.trim().split('=');
+          if (name === 'csrftoken') {
+              return value;
+          }
+      }
+      return null;
+  }
+});
+</script>
+<script>
+  function printDiv() {
+      // Get the content of the div   
+      var divContents = document.getElementById("printableDiv").innerHTML;
+      // Create a new window
+      var printWindow = window.open('', '', 'height=600,width=800');
+      // Write the contents to the new window
+      printWindow.document.write('<html><head><title>Print DIV Content</title>');
+      printWindow.document.write('</head><body >');
+      printWindow.document.write(divContents);
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.print();
+  }
+</script>
+  <script src="{%  static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>    
+    <script src="{%  static 'assets/vendors/select2/select2.min.js' %}"></script>
+    <script src="{%  static 'assets/vendors/typeahead.js/typeahead.bundle.min.js' %}"></script>    
+    <script src="{%  static 'assets/js/off-canvas.js' %}"></script>
+    <script src="{%  static 'assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{%  static 'assets/js/misc.js' %}"></script>
+    <script src="{%  static 'assets/js/settings.js' %}"></script>
+    <script src="{%  static 'assets/js/todolist.js' %}"></script>    
+    <script src="{%  static 'assets/js/file-upload.js' %}"></script>
+    <script src="{%  static 'assets/js/typeahead.js' %}"></script>
+    <script src="{%  static 'assets/js/select2.js' %}"></script>    
+  </body>
+{% endblock %}

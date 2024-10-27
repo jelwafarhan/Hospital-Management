@@ -1,0 +1,115 @@
+{% extends 'master/doctorhome.html' %}
+{% load static %}
+
+{% block dynamic_page %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Corona Admin</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="{% static 'assets/vendors/mdi/css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/css/vendor.bundle.base.css' %}">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <link rel="stylesheet" href="{% static 'assets/vendors/jvectormap/jquery-jvectormap.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/flag-icon-css/css/flag-icon.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/vendors/owl-carousel-2/owl.theme.default.min.css' %}">
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" />
+  </head>
+  <body>
+    <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+      <div class="card col-lg-4 mx-auto">
+        <div class="card-body px-5 py-5">
+          {% for doctor in doctordetials %}   
+          <h3 class="card-title text-left mb-3">Welcome Doctor</h3>
+          <h2 class="card-title text-left mb-3"> {{doctor.name}}</h2>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+          <div class="content-wrapper">           
+            <div class="row ">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Booking Status</h4>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>
+                              <div class="form-check form-check-muted m-0">                                
+                              </div>
+                            </th>
+                            <th> Patient Name  </th>
+                            <th> Token No </th>
+                            <th> Doctor Name </th>
+                            <th> Date </th>
+                            <th> TIme </th> 
+                            <th> Status </th>                           
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for booking in bookinglists %}
+                          <tr>
+                            <td>
+                              <div class="form-check form-check-muted m-0">
+                                <label class="form-check-label">
+                                  <input type="checkbox" class="form-check-input">
+                                </label>
+                              </div>
+                            </td>
+                            <td>
+                              <img src="{% static 'assets/images/faces/face1.jpg' %}" alt="image">
+                              <span class="pl-2">{{booking.doctor.name}}</span>
+                            </td>
+                            <td> {{booking.id}} </td>
+                            <td> {{booking.doctor}} </td>
+                            <td> {{booking.doctor.date}} </td>
+                            <td> {{booking.doctor.time}} </td>
+                            <td>
+                              <div class="badge badge-outline-success">Approved</div>
+                              
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+                     
+          </div>          
+    <script src="{% static 'assets/vendors/js/vendor.bundle.base.js' %}"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="{% static 'assets/vendors/chart.js/Chart.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/progressbar.js/progressbar.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap.min.js' %}"></script>
+    <script src="{% static 'assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'assets/vendors/owl-carousel-2/owl.carousel.min.js' %}"></script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <script src="{% static 'assets/js/off-canvas.js' %}"></script>
+    <script src="{% static 'assets/js/hoverable-collapse.js' %}"></script>
+    <script src="{% static 'assets/js/misc.js' %}"></script>
+    <script src="{% static 'assets/js/settings.js' %}"></script>
+    <script src="{% static 'assets/js/todolist.js' %}"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="{% static 'assets/js/dashboard.js' %}"></script>
+    <!-- End custom js for this page -->
+  </body>
+  {% endblock %} 
